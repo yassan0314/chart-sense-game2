@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#17202a">
+    <title>Chart Sense Game</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css?v=6">
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Technical Analysis</p>
+        <h1>Chart Sense Game</h1>
+      </div>
+      <nav class="top-nav" aria-label="ページ内メニュー">
+        <a href="#principles">Basics</a>
+        <a href="#lessons">Lessons</a>
+        <a href="#notebook">Notes</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#game">Game</a>
+        <a href="#risk">Risk</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="market-board" aria-label="サイト概要">
+        <div class="market-copy">
+          <p class="section-kicker">Chart Training</p>
+          <h2>次の値動きを予想して、チャートの読み方をゲームで覚える。</h2>
+          <p>
+            ローソク足、移動平均線、RSI、出来高、支持線を見ながら「買い」「売り/撤退」「見送り」を選びます。正解後に未来の足が開き、判断理由を確認できます。
+          </p>
+          <p class="source-note">
+            参考: <a href="https://finance.yahoo.co.jp/nisa/article/detail/250" target="_blank" rel="noreferrer">Yahoo!ファイナンス NISA記事</a> の内容を学習用に要約・再構成。
+          </p>
+        </div>
+        <div class="signal-strip" aria-label="ゲームスコア">
+          <div>
+            <span>Score</span>
+            <strong id="heroScore">0</strong>
+          </div>
+          <div>
+            <span>Stage</span>
+            <strong id="heroStage">1</strong>
+          </div>
+          <div>
+            <span>Life</span>
+            <strong id="heroLives">♥♥♥</strong>
+          </div>
+        </div>
+      </section>
+
+      <section id="principles" class="section-shell">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Three Principles</p>
+            <h2>テクニカル分析の3原則</h2>
+          </div>
+        </div>
+        <div class="principle-grid">
+          <article>
+            <span>01</span>
+            <h3>価格は情報を織り込む</h3>
+            <p>業績、ニュース、期待、不安は最終的に価格へ表れます。まずはチャート上の事実を確認します。</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>価格はトレンドを作る</h3>
+            <p>一度できた方向感はしばらく続くことがあります。高値・安値の切り上げ、切り下げを見ます。</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>値動きは繰り返されやすい</h3>
+            <p>投資家心理は似た場面で似た反応をしがちです。チャートパターンはその心理の型として使います。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="lessons" class="section-shell">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Quick Lessons</p>
+            <h2>ゲームで使う読み方</h2>
+          </div>
+        </div>
+
+        <div class="lesson-grid" id="lessonGrid">
+          <article class="lesson-card" data-topic="candlestick">
+            <div class="lesson-visual candle-visual"></div>
+            <p class="tag">Price</p>
+            <h3>ローソク足</h3>
+            <p>実体とヒゲで、買い手と売り手の攻防を読みます。</p>
+          </article>
+          <article class="lesson-card" data-topic="ma">
+            <div class="lesson-visual ma-visual"></div>
+            <p class="tag">Trend</p>
+            <h3>移動平均線</h3>
+            <p>短期線と中期線の向き、クロス、株価との位置を見ます。</p>
+          </article>
+          <article class="lesson-card" data-topic="rsi">
+            <div class="lesson-visual oscillator"></div>
+            <p class="tag">Momentum</p>
+            <h3>RSI</h3>
+            <p>買われすぎ、売られすぎを数値の目安として確認します。</p>
+          </article>
+          <article class="lesson-card" data-topic="volume">
+            <div class="lesson-visual volume-bars"></div>
+            <p class="tag">Participation</p>
+            <h3>出来高</h3>
+            <p>上昇や下落に参加者がついてきているかを見ます。</p>
+          </article>
+          <article class="lesson-card" data-topic="time">
+            <div class="lesson-visual time-visual"></div>
+            <p class="tag">Timing</p>
+            <h3>時間帯</h3>
+            <p>東京、欧州、米国の入り口は値動きが出やすく、待つ判断も大切です。</p>
+          </article>
+          <article class="lesson-card" data-topic="daily">
+            <div class="lesson-visual daily-visual"></div>
+            <p class="tag">Daily</p>
+            <h3>日足判断</h3>
+            <p>強い陽線、迷いのコマ足、下落継続の足を確率感で整理します。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="notebook" class="section-shell">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Notebook Sources</p>
+            <h2>写真ノートから学ぶ</h2>
+          </div>
+          <p class="section-note">手書きメモは原本として残し、重要ポイントは下のゲームと表に反映しています。</p>
+        </div>
+        <div class="note-gallery">
+          <figure class="note-card">
+            <img src="assets/notes/115936_0.jpg" alt="ローソク足の買いサインと売りサインの一覧">
+            <figcaption>
+              <strong>ローソク足シグナル</strong>
+              <span>形だけで決めず、位置と直前の流れもセットで見る。</span>
+            </figcaption>
+          </figure>
+          <figure class="note-card">
+            <img src="assets/notes/115940_0.jpg" alt="時間別のチャンス早見表">
+            <figcaption>
+              <strong>時間帯の癖</strong>
+              <span>勢いが出る時間、だましが出やすい時間を分けて考える。</span>
+            </figcaption>
+          </figure>
+          <figure class="note-card">
+            <img src="assets/notes/115941_0.jpg" alt="移動平均線の学習ノート">
+            <figcaption>
+              <strong>移動平均線</strong>
+              <span>クロス、角度、株価との距離でトレンドの強さを確認する。</span>
+            </figcaption>
+          </figure>
+          <figure class="note-card">
+            <img src="assets/notes/115944_0.jpg" alt="ダブルボトム攻略ノート">
+            <figcaption>
+              <strong>ダブルボトム</strong>
+              <span>2番底の強さとネックライン突破を確認してから判断する。</span>
+            </figcaption>
+          </figure>
+          <figure class="note-card">
+            <img src="assets/notes/115946_0.jpg" alt="RSIの学習ノート">
+            <figcaption>
+              <strong>RSI</strong>
+              <span>30割れや70超えは、反転候補として他の根拠と合わせる。</span>
+            </figcaption>
+          </figure>
+          <figure class="note-card">
+            <img src="assets/notes/115949_0.jpg" alt="日足トレードの判断表">
+            <figcaption>
+              <strong>日足トレード</strong>
+              <span>足の強弱を確率で捉え、無理なエントリーを減らす。</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="patterns" class="section-shell">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Pattern Notes</p>
+            <h2>ゲームで出るパターン</h2>
+          </div>
+        </div>
+        <div class="table-wrap pattern-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>パターン</th>
+                <th>意味</th>
+                <th>見るポイント</th>
+                <th>ゲームでの判断</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>上昇トレンド</td>
+                <td>買い優勢</td>
+                <td>高値・安値の切り上げ、MA上向き</td>
+                <td>押し目なら買い候補</td>
+              </tr>
+              <tr>
+                <td>ダブルトップ</td>
+                <td>上値が重い</td>
+                <td>2回高値を試して失敗</td>
+                <td>支持線割れなら撤退候補</td>
+              </tr>
+              <tr>
+                <td>三角保ち合い</td>
+                <td>方向待ち</td>
+                <td>値幅が収束し、抜け方向が未確定</td>
+                <td>抜けるまでは見送り</td>
+              </tr>
+              <tr>
+                <td>出来高ブレイク</td>
+                <td>参加者増加</td>
+                <td>高値更新と出来高増加が重なる</td>
+                <td>買い候補だが損切りも決める</td>
+              </tr>
+              <tr>
+                <td>ダブルボトム</td>
+                <td>下落一服の可能性</td>
+                <td>2番底で下げ止まり、ネックラインを上抜ける</td>
+                <td>突破後の押し目なら買い候補</td>
+              </tr>
+              <tr>
+                <td>RSI反転</td>
+                <td>売られすぎからの戻り</td>
+                <td>30付近から反発し、価格も下げ止まる</td>
+                <td>根拠が重なれば買い候補</td>
+              </tr>
+              <tr>
+                <td>コマ足・迷い足</td>
+                <td>方向感が弱い</td>
+                <td>実体が小さく上下ヒゲが出る</td>
+                <td>次の足や節目抜けまで見送り</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="game" class="section-shell game-section">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Chart Game</p>
+            <h2>次の一手を選ぶ</h2>
+          </div>
+          <div class="game-stats" aria-label="ゲーム成績">
+            <div><span>Score</span><strong id="scoreValue">0</strong></div>
+            <div><span>Combo</span><strong id="streakValue">x0</strong></div>
+            <div><span>Life</span><strong id="lifeValue">♥♥♥</strong></div>
+            <div><span>Round</span><strong id="roundValue">1/5</strong></div>
+          </div>
+        </div>
+
+        <div class="game-layout">
+          <div class="chart-stage">
+            <div class="stage-banner">
+              <span id="stageLabel">Stage 1</span>
+              <strong id="stageTitle">Trend Basics</strong>
+            </div>
+            <div class="mission-hud">
+              <div>
+                <span>Mission</span>
+                <strong id="missionName">Trend Read</strong>
+              </div>
+              <div>
+                <span>Rank</span>
+                <strong id="rankValue">Rookie</strong>
+              </div>
+              <div>
+                <span>Time</span>
+                <strong id="timerValue">20</strong>
+              </div>
+            </div>
+            <div class="timer-track" aria-label="残り時間">
+              <div id="timerFill"></div>
+            </div>
+            <canvas id="priceChart" width="960" height="430" aria-label="チャートゲーム"></canvas>
+            <div class="celebration" id="celebration" aria-hidden="true">
+              <strong id="celebrationTitle">PERFECT</strong>
+              <span id="celebrationPoints">+100</span>
+            </div>
+            <div class="round-pips" id="roundPips" aria-label="ラウンド進行"></div>
+          </div>
+          <aside class="game-panel">
+            <p class="tag" id="scenarioTag">Trend</p>
+            <h3 id="scenarioTitle">上昇トレンドの押し目</h3>
+            <p id="scenarioQuestion">チャートを見て、次の一手を選んでください。</p>
+
+            <div class="choice-grid" role="group" aria-label="次の一手">
+              <button type="button" class="choice-button buy" data-choice="buy">買い</button>
+              <button type="button" class="choice-button sell" data-choice="sell">売り/撤退</button>
+              <button type="button" class="choice-button wait" data-choice="wait">見送り</button>
+            </div>
+
+            <div class="feedback-box" id="feedbackBox" aria-live="polite">
+              <strong>ヒント</strong>
+              <p id="feedbackText">未来の足はまだ隠れています。移動平均線、支持線、出来高を順番に見てみましょう。</p>
+            </div>
+
+            <div class="reward-box">
+              <div>
+                <span>判定</span>
+                <strong id="resultTitle">未回答</strong>
+              </div>
+              <p id="resultMeta">早く正確に答えるとタイムボーナスが入ります。</p>
+            </div>
+
+            <div class="badge-shelf" id="badgeShelf" aria-label="獲得バッジ"></div>
+
+            <ul id="gameChecklist" class="study-list"></ul>
+            <div class="game-actions">
+              <button type="button" class="next-button" id="nextRound">次のチャート</button>
+              <button type="button" class="reset-button" id="resetGame">リセット</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="risk" class="section-shell risk-section">
+        <div>
+          <p class="section-kicker">Risk Calculator</p>
+          <h2>損切りライン計算</h2>
+        </div>
+        <form class="risk-form" id="riskForm">
+          <label>
+            購入価格
+            <input type="number" id="entryPrice" value="12800" min="1" step="1">
+          </label>
+          <label>
+            株数
+            <input type="number" id="shares" value="100" min="1" step="1">
+          </label>
+          <label>
+            許容損失 %
+            <input type="number" id="riskPercent" value="3" min="0.1" max="30" step="0.1">
+          </label>
+        </form>
+        <div class="risk-results" aria-live="polite">
+          <div>
+            <span>損切り価格</span>
+            <strong id="stopPrice">¥12,416</strong>
+          </div>
+          <div>
+            <span>想定損失</span>
+            <strong id="lossAmount">¥38,400</strong>
+          </div>
+          <div>
+            <span>建玉代金</span>
+            <strong id="positionValue">¥1,280,000</strong>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Chart Sense Game</span>
+      <span>Personal technical training</span>
+    </footer>
+
+    <script src="script.js?v=6"></script>
+    <script>
+      if ("serviceWorker" in navigator && location.protocol !== "file:") {
+        navigator.serviceWorker.register("service-worker.js?v=6");
+      }
+    </script>
+  </body>
+</html>
