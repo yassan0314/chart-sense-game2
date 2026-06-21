@@ -7,7 +7,7 @@
     <title>Chart Sense Game</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" href="icon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=7">
   </head>
   <body>
     <header class="app-header">
@@ -295,6 +295,15 @@
             <h3 id="scenarioTitle">上昇トレンドの押し目</h3>
             <p id="scenarioQuestion">チャートを見て、次の一手を選んでください。</p>
 
+            <div class="note-lens" id="noteLens">
+              <div>
+                <span>Notebook Rule</span>
+                <strong id="noteRuleTitle">押し目買い</strong>
+              </div>
+              <p id="noteRuleBody">ノートの型に沿って、価格の位置、勢い、待つ理由を順番に確認します。</p>
+              <ul id="noteRuleSteps"></ul>
+            </div>
+
             <div class="choice-grid" role="group" aria-label="次の一手">
               <button type="button" class="choice-button buy" data-choice="buy">買い</button>
               <button type="button" class="choice-button sell" data-choice="sell">売り/撤退</button>
@@ -366,10 +375,10 @@
       <span>Personal technical training</span>
     </footer>
 
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=7"></script>
     <script>
       if ("serviceWorker" in navigator && location.protocol !== "file:") {
-        navigator.serviceWorker.register("service-worker.js?v=6");
+        navigator.serviceWorker.register("service-worker.js?v=7");
       }
     </script>
   </body>

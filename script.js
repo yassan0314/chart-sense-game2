@@ -111,6 +111,65 @@ const scenarios = [
   }
 ];
 
+const notebookRules = {
+  Trend: {
+    title: "押し目買い",
+    source: "移動平均線ノート",
+    body: "上昇中は、短期線が中期線より上で、価格が押してから戻る場所を探します。",
+    steps: ["MAの向きが上", "安値を切り上げ", "反発足で買いを検討"],
+    signal: "押し目"
+  },
+  Reversal: {
+    title: "売り/撤退シグナル",
+    source: "ローソク足ノート",
+    body: "高値更新に失敗し、支持線を割ったら、期待よりも損失管理を優先します。",
+    steps: ["同じ高値で失速", "ネックライン割れ", "下落の出来高増加"],
+    signal: "撤退"
+  },
+  Range: {
+    title: "待つ相場",
+    source: "時間帯・保ち合いノート",
+    body: "上下どちらにも抜けていない途中の形は、当てに行かず方向が出るまで待ちます。",
+    steps: ["高値切り下げ", "安値切り上げ", "抜けるまで見送り"],
+    signal: "待ち"
+  },
+  Momentum: {
+    title: "飛びつき注意",
+    source: "RSIノート",
+    body: "強い上昇でも、短期的に伸びすぎた場面は押し目を待つほうが安定します。",
+    steps: ["連続陽線", "MAから離れすぎ", "過熱後の反落に注意"],
+    signal: "過熱"
+  },
+  Volume: {
+    title: "出来高ブレイク",
+    source: "日足トレードノート",
+    body: "高値更新と出来高増加が重なると、参加者が増えたブレイクとして見ます。",
+    steps: ["抵抗線を上抜け", "出来高が増える", "抜けた価格を損切り目安にする"],
+    signal: "突破"
+  },
+  Bottom: {
+    title: "ダブルボトム",
+    source: "ダブルボトム攻略ノート",
+    body: "2番底で下げ止まり、ネックラインを上抜けたら下落一服の買い候補です。",
+    steps: ["2番底が耐える", "ネックライン突破", "突破後の押しを待つ"],
+    signal: "W底"
+  },
+  RSI: {
+    title: "RSI反転",
+    source: "RSIノート",
+    body: "売られすぎ圏から反発し、価格も下げ止まるなら短期反発を狙えます。",
+    steps: ["RSI 30付近", "下落の鈍化", "小さな高値更新"],
+    signal: "反発"
+  },
+  Daily: {
+    title: "コマ足は待つ",
+    source: "日足トレード表",
+    body: "実体が小さい足は迷いのサイン。次の強い陽線・陰線を確認してから動きます。",
+    steps: ["実体が小さい", "上下ヒゲが出る", "次の足を待つ"],
+    signal: "様子見"
+  }
+};
+
 const canvas = document.querySelector("#priceChart");
 const ctx = canvas.getContext("2d");
 const choiceButtons = document.querySelectorAll(".choice-button");
@@ -149,6 +208,24 @@ function drawLine(points, color, width = 2, dashed = false) {
   ctx.strokeStyle = color;
   ctx.lineWidth = width;
   ctx.stroke();
+  ctx.restore();
+}
+
+function drawNoteSignal(label, x, y, color) {
+  ctx.save();
+  ctx.font = "800 18px Segoe UI, sans-serif";
+  const metrics = ctx.measureText(label);
+  const boxWidth = metrics.width + 28;
+  const boxHeight = 34;
+  ctx.fillStyle = "rgba(255, 255, 255, 0.92)";
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(x, y, boxWidth, boxHeight, 8);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.fillText(label, x + 14, y + 23);
   ctx.restore();
 }
 
@@ -248,6 +325,24 @@ function drawGameChart() {
       y: y - 18 + Math.sin(index / 2) * 13
     })), "#0891b2", 2);
   }
+
+  const rule = notebookRules[scenario.tag] || notebookRules.Trend;
+  const markerIndex = Math.min(hiddenStart - 1, visibleCount - 1);
+  const markerX = toX(markerIndex);
+  const markerY = Math.max(pad + 10, toY(visiblePrices[markerIndex]) - 58);
+  drawNoteSignal(rule.signal, Math.min(markerX - 44, width - pad - 100), markerY, scenario.answer === "sell" ? "#d95040" : scenario.answer === "wait" ? "#c47a16" : "#0f9f6e");
+
+  ctx.save();
+  ctx.strokeStyle = "rgba(23, 32, 42, 0.18)";
+  ctx.setLineDash([5, 7]);
+  ctx.beginPath();
+  ctx.moveTo(toX(hiddenStart - 1), pad);
+  ctx.lineTo(toX(hiddenStart - 1), height - pad);
+  ctx.stroke();
+  ctx.fillStyle = "rgba(23, 32, 42, 0.48)";
+  ctx.font = "700 13px Segoe UI, sans-serif";
+  ctx.fillText("判断ライン", toX(hiddenStart - 1) - 36, height - 18);
+  ctx.restore();
 }
 
 function rankName() {
@@ -381,6 +476,7 @@ function startTimer() {
 
 function updateGamePanel() {
   const scenario = scenarios[roundIndex];
+  const rule = notebookRules[scenario.tag] || notebookRules.Trend;
   document.querySelector("#game").classList.remove("is-answered");
   document.querySelector("#stageLabel").textContent = `Stage ${currentStage}`;
   document.querySelector("#stageTitle").textContent = stageTitle();
@@ -388,6 +484,9 @@ function updateGamePanel() {
   document.querySelector("#scenarioTag").textContent = scenario.tag;
   document.querySelector("#scenarioTitle").textContent = scenario.title;
   document.querySelector("#scenarioQuestion").textContent = "未来のローソク足は隠れています。次の一手を選んでください。";
+  document.querySelector("#noteRuleTitle").textContent = rule.title;
+  document.querySelector("#noteRuleBody").textContent = `${rule.source}: ${rule.body}`;
+  document.querySelector("#noteRuleSteps").innerHTML = rule.steps.map(item => `<li>${item}</li>`).join("");
   document.querySelector("#gameChecklist").innerHTML = scenario.checklist.map(item => `<li>${item}</li>`).join("");
   document.querySelector("#feedbackText").textContent = "移動平均線、支持線、出来高を順番に見てみましょう。";
   document.querySelector("#feedbackBox").className = "feedback-box";
@@ -414,6 +513,7 @@ function animatePanel(correct) {
 function chooseAnswer(choice) {
   if (revealed) return;
   const scenario = scenarios[roundIndex];
+  const rule = notebookRules[scenario.tag] || notebookRules.Trend;
   const correct = choice === scenario.answer;
   revealed = true;
   stopTimer();
@@ -447,10 +547,10 @@ function chooseAnswer(choice) {
   document.querySelector("#feedbackText").textContent = `${prefix} ${scenario.explanation}`;
   document.querySelector("#resultTitle").textContent = correct ? `+${gained} pts` : lives === 0 ? "Game Over" : "Life -1";
   document.querySelector("#resultMeta").textContent = correct
-    ? `基本100点 + コンボ + 残り時間ボーナス。現在ランク: ${rankName()}`
+    ? `${rule.title}を使って読めました。現在ランク: ${rankName()}`
     : lives === 0
       ? "リセットしてもう一度挑戦できます。"
-      : "未来の足を確認して、次のチャートで取り返しましょう。";
+      : `${rule.title}の見る順番を確認して、次のチャートで取り返しましょう。`;
 
   nextButton.disabled = lives === 0;
   animatePanel(correct);

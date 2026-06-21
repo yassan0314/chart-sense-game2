@@ -882,6 +882,66 @@ canvas {
   line-height: 1.5;
 }
 
+.note-lens {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(15, 159, 110, 0.08)),
+    #fff;
+}
+
+.note-lens div {
+  display: grid;
+  gap: 2px;
+}
+
+.note-lens span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.note-lens strong {
+  font-size: 1.05rem;
+}
+
+.note-lens p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.note-lens ul {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note-lens li {
+  position: relative;
+  padding-left: 18px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.note-lens li::before {
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--blue);
+  content: "";
+}
+
 .choice-grid {
   display: grid;
   grid-template-columns: 1fr;
